@@ -34,11 +34,11 @@
                 </div>
             </div>
 
-            <form action="login/login.php">
+            <form action="/login" method="POST">
                 <div class="campo">
                     <label for="email">Email</label>
                     <div class="input-icono">
-                        <input class="input" type="email" id="email" placeholder="correo@cdconstitucion.tecnm.mx">
+                        <input class="input" type="email" id="email" name="email" placeholder="correo@cdconstitucion.tecnm.mx">
                         <span class="icono"><i class="bi bi-person-fill"></i></span>
                     </div>
                 </div>
@@ -46,7 +46,7 @@
                 <div class="campo">
                     <label for="password">Password</label>
                     <div class="input-icono">
-                        <input class="input" type="password" id="password" placeholder="Tu contraseña">
+                        <input class="input" type="password" id="password" name="email" placeholder="Tu contraseña">
                         <button type="button" class="icono" id="verPass" title="Mostrar contraseña"><i class="bi bi-lock-fill"></i></button>
                     </div>
                 </div>
@@ -72,6 +72,32 @@
         campo.type = oculto ? 'text' : 'password';
         btn.innerHTML = oculto ? '<i class="bi bi-unlock-fill"></i>' : '<i class="bi bi-lock-fill"></i>';
     });
+    const form = document.querySelector('form');
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const respuesta = await fetch('/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                email: document.getElementById('email').value,
+                password: document.getElementById('password').value
+            })
+        });
+
+        const datos = await respuesta.json();
+
+        if (respuesta.ok) {
+            window.location.href = '/front/Proyecto/inicio/inicio.php';
+        } else {
+            alert(datos.mensaje || 'Revisa tus datos');
+        }
+    });
+
 </script>
 </body>
 </html>
