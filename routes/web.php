@@ -33,6 +33,12 @@ Route::middleware(['auth', 'activo'])->group(function () {
     // Consulta: lista de niveles
     Route::get('/niveles', [NivelController::class, 'index'])->name('niveles.index');
 
+    // Guarda niveles
+    Route::post('/niveles', [NivelController::class, 'store'])->name('niveles.store');
+
+    // Edita niveles
+    Route::put('/niveles/{nivel}', [NivelController::class, 'update'])->name('niveles.update');
+
     Route::get('/front/Proyecto/{ruta}', function (string $ruta) {
         $base = realpath(resource_path('paginas/Proyecto'));
         $archivo = realpath($base . '/' . $ruta);

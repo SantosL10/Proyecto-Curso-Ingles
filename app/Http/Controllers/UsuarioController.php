@@ -49,8 +49,8 @@ class UsuarioController extends Controller
             'email'    => ['required', 'email', 'max:150', Rule::unique('users', 'email')->ignore($usuario->id)],
             'password' => 'nullable|string|min:8',
             'rol'      => 'required|in:admin,consulta,docente,alumno',
-        ]);
-
+        ], $this->mensajes(), $this->atributos());
+        
         if (empty($datos['password'])) {
             unset($datos['password']);
         }
