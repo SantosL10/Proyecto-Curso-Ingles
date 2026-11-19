@@ -22,6 +22,7 @@
             <a href="grupos.php"><i class="bi bi-collection"></i>Grupos</a>
             <a href="nivel.php"><i class="bi bi-bar-chart-steps"></i>Nivel</a>
             <a href="horarios.php" class="activo"><i class="bi bi-clock"></i>Horarios</a>
+            <a href="periodos.php"><i class="bi bi-calendar-event"></i>Periodos</a>
             <a href="usuarios.php"><i class="bi bi-people"></i>Usuarios</a>
         </div>
         <div class="menu-salir"><a href="#" id="cerrarSesion"><i class="bi bi-box-arrow-left"></i>Cerrar sesión</a></div>

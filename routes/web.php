@@ -4,7 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\NivelController;
 use App\Http\Controllers\UsuarioController;
-
+use App\Http\Controllers\HorarioController;
+use App\Http\Controllers\PeriodoController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -38,6 +39,12 @@ Route::middleware(['auth', 'activo'])->group(function () {
 
     // Edita niveles
     Route::put('/niveles/{nivel}', [NivelController::class, 'update'])->name('niveles.update');
+
+    Route::get('/horarios', [HorarioController::class, 'index'])->name('horarios.index');
+
+    Route::get('/periodos', [PeriodoController::class, 'index'])->name('periodos.index');
+    Route::post('/periodos', [PeriodoController::class, 'store'])->name('periodos.store');
+    Route::put('/periodos/{periodo}', [PeriodoController::class, 'update'])->name('periodos.update');
 
     Route::get('/front/Proyecto/{ruta}', function (string $ruta) {
         $base = realpath(resource_path('paginas/Proyecto'));
