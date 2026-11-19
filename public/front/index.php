@@ -8,8 +8,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="login/css/estilos.css">
-    <link rel="icon" href="img/logo_its.png">
+    <link rel="stylesheet" href="/front/login/css/estilos.css">
+    <link rel="icon" href="/front/img/logo_its.png">
 </head>
 <body>
 <div class="login">
@@ -27,7 +27,7 @@
     <section class="login-lado">
         <div class="login-tarjeta">
             <div class="login-cabecera">
-                <img src="img/logo_its.png" alt="Logo ITSCC">
+                <img src="/front/img/logo_its.png" alt="Logo ITSCC">
                 <div>
                     <h1>CLE APP</h1>
                     <small>Instituto Tecnológico Superior de Ciudad Constitución</small>
@@ -99,5 +99,6 @@
     });
 
 </script>
+
 </body>
 </html>

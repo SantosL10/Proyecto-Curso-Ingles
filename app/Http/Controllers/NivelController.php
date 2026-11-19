@@ -10,7 +10,7 @@ class NivelController extends Controller
     public function index()
     {
         // Pide al modelo todos los niveles
-        $niveles = Nivel::orderBy('orden')->get();
+        $niveles = Nivel::orderBy('tipo')->orderBy('orden')->get();
         return response()->json($niveles);
     }
 }

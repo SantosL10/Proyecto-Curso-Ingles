@@ -29,12 +29,15 @@ CREATE TABLE users (
 CREATE TABLE niveles (
   id          BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   orden       TINYINT UNSIGNED NOT NULL,
+  clave       VARCHAR(20) NOT NULL,
+  tipo        ENUM('interno', 'externo') NOT NULL,
   nombre      VARCHAR(50) NOT NULL,
   created_at  TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at  TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  CONSTRAINT uq_niveles_orden  UNIQUE (orden),
-  CONSTRAINT uq_niveles_nombre UNIQUE (nombre),
-  CONSTRAINT ck_niveles_orden  CHECK (orden >= 1)
+  CONSTRAINT uq_niveles_clave       UNIQUE (clave),
+  CONSTRAINT uq_niveles_tipo_orden  UNIQUE (tipo, orden),
+  CONSTRAINT uq_niveles_tipo_nombre UNIQUE (tipo, nombre),
+  CONSTRAINT ck_niveles_orden       CHECK (orden >= 1)
 ) ENGINE=InnoDB;
 
 -- ---------------------------------------------------------
@@ -98,7 +101,6 @@ CREATE TABLE grupos (
   periodo_id   BIGINT UNSIGNED NOT NULL,
   nivel_id     BIGINT UNSIGNED NOT NULL,
   docente_id   BIGINT UNSIGNED NULL,
-  tipo         ENUM('interno', 'externo') NOT NULL,
   hora_inicio  TIME NOT NULL,
   hora_fin     TIME NOT NULL,
   cupo         SMALLINT UNSIGNED NOT NULL,
@@ -110,7 +112,7 @@ CREATE TABLE grupos (
     REFERENCES niveles (id) ON DELETE RESTRICT,
   CONSTRAINT fk_grupos_docente FOREIGN KEY (docente_id)
     REFERENCES users (id) ON DELETE SET NULL,
-  CONSTRAINT uq_grupos_horario    UNIQUE (periodo_id, nivel_id, tipo, hora_inicio),
+  CONSTRAINT uq_grupos_horario    UNIQUE (periodo_id, nivel_id, hora_inicio),
   CONSTRAINT uq_grupos_id_periodo UNIQUE (id, periodo_id),
   CONSTRAINT ck_grupos_horas CHECK (hora_fin > hora_inicio),
   CONSTRAINT ck_grupos_cupo  CHECK (cupo > 0)
@@ -189,14 +191,21 @@ CREATE TABLE codigos_verificacion (
 -- ---------------------------------------------------------
 -- Datos base: los 7 niveles
 -- ---------------------------------------------------------
-INSERT INTO niveles (orden, nombre) VALUES
-  (1, 'Beginner'),
-  (2, 'Elementary'),
-  (3, 'Preintermediate A'),
-  (4, 'Preintermediate B'),
-  (5, 'Intermediate'),
-  (6, 'Upper-intermediate'),
-  (7, 'Advanced');
+INSERT INTO niveles (orden, clave, tipo, nombre) VALUES
+  (1, 'INT-BEG', 'interno', 'Beginner'),
+  (2, 'INT-ELE', 'interno', 'Elementary'),
+  (3, 'INT-PIA', 'interno', 'Preintermediate A'),
+  (4, 'INT-PIB', 'interno', 'Preintermediate B'),
+  (5, 'INT-INT', 'interno', 'Intermediate'),
+  (6, 'INT-UPI', 'interno', 'Upper-intermediate'),
+  (7, 'INT-ADV', 'interno', 'Advanced'),
+  (1, 'EXT-BEG', 'externo', 'Beginner'),
+  (2, 'EXT-ELE', 'externo', 'Elementary'),
+  (3, 'EXT-PIA', 'externo', 'Preintermediate A'),
+  (4, 'EXT-PIB', 'externo', 'Preintermediate B'),
+  (5, 'EXT-INT', 'externo', 'Intermediate'),
+  (6, 'EXT-UPI', 'externo', 'Upper-intermediate'),
+  (7, 'EXT-ADV', 'externo', 'Advanced');
 
 -- Verificación: deben salir 10 tablas
 SHOW TABLES;

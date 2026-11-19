@@ -12,7 +12,14 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        
+        $middleware->validateCsrfTokens(except: [
+            'login',
+            'logout',
+        ]);
+        $middleware->alias([
+            'activo' => \App\Http\Middleware\VerificarActivo::class,
+        ]);
+        $middleware->redirectGuestsTo('/front/');
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(

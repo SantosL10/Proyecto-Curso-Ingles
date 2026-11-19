@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -16,6 +17,15 @@ class AuthController extends Controller
             'email'    => ['required', 'email'],
             'password' => ['required', 'string'],
         ]);
+        // Si la contraseña es correcta pero el usuario está desactivado, avisa.
+        $usuario = User::where('email', $datos['email'])->first();
+
+        if ($usuario && Hash::check($datos['password'], $usuario->password) && ! $usuario->activo) {
+            return response()->json(
+                ['mensaje' => 'Tu usuario está desactivado. Contacta al administrador.'],
+                403
+            );
+        }
 
         // Solo pueden entrar usuarios activos.
         $credenciales = $datos + ['activo' => true];

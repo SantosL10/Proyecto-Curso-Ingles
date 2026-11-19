@@ -24,14 +24,14 @@
             <a href="../Configuraciones/horarios.php"><i class="bi bi-clock"></i>Horarios</a>
             <a href="../Configuraciones/usuarios.php"><i class="bi bi-people"></i>Usuarios</a>
         </div>
-        <div class="menu-salir"><a href="../../login/logout.php"><i class="bi bi-box-arrow-left"></i>Cerrar sesión</a></div>
+        <div class="menu-salir"><a href="#" id="cerrarSesion"><i class="bi bi-box-arrow-left"></i>Cerrar sesión</a></div>
     </aside>
 
     <main class="contenido">
         <header class="encabezado">
-            <img src="../../img/logo_its.png" alt="Logo ITSCC">
+            <img src="/front/img/logo_its.png" alt="Logo ITSCC">
             <h1>Instituto Tecnológico Superior de Ciudad Constitución</h1>
-            <div class="usuario"><span></span><div class="avatar"><i class="bi bi-person"></i></div></div>
+            <div class="usuario"><span id="nombreUsuario"></span><div class="avatar"><i class="bi bi-person"></i></div></div>
         </header>
 
         <div class="herramientas">
@@ -79,5 +79,6 @@
         document.getElementById('tituloTabla').textContent = 'Inscritos ' + (b.dataset.ver === 'internos' ? 'Internos' : 'Externos');
     }));
 </script>
+<script src="/front/login/sesion.js"></script>
 </body>
 </html>
