@@ -23,6 +23,7 @@ abstract class Controller
             'exists'       => 'El :attribute seleccionado no existe.',
             'date_format'  => 'El campo :attribute debe tener formato de hora (HH:MM).',
             'after'        => 'La :attribute debe ser posterior a la :date.',
+            'regex' => 'El campo :attribute solo puede llevar letras y números, sin espacios.',
         ];
     }
 
@@ -49,6 +50,8 @@ abstract class Controller
             'hora_inicio' => 'hora de inicio',
             'hora_fin'    => 'hora de fin',
             'cupo'        => 'cupo',
+            'docente_id'  => 'docente',
+            'salon' => 'salón',
         ];
     }
 }

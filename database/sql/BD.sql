@@ -100,6 +100,7 @@ CREATE TABLE grupos (
   id           BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   periodo_id   BIGINT UNSIGNED NOT NULL,
   nivel_id     BIGINT UNSIGNED NOT NULL,
+  salon        VARCHAR(10) NOT NULL,
   docente_id   BIGINT UNSIGNED NULL,
   hora_inicio  TIME NOT NULL,
   hora_fin     TIME NOT NULL,
@@ -112,8 +113,8 @@ CREATE TABLE grupos (
     REFERENCES niveles (id) ON DELETE RESTRICT,
   CONSTRAINT fk_grupos_docente FOREIGN KEY (docente_id)
     REFERENCES users (id) ON DELETE SET NULL,
-  CONSTRAINT uq_grupos_horario    UNIQUE (periodo_id, nivel_id, hora_inicio),
-  CONSTRAINT uq_grupos_id_periodo UNIQUE (id, periodo_id),
+  CONSTRAINT uq_grupos_salon_horario UNIQUE (periodo_id, salon, hora_inicio),
+  CONSTRAINT uq_grupos_id_periodo    UNIQUE (id, periodo_id),
   CONSTRAINT ck_grupos_horas CHECK (hora_fin > hora_inicio),
   CONSTRAINT ck_grupos_cupo  CHECK (cupo > 0)
 ) ENGINE=InnoDB;
@@ -189,7 +190,7 @@ CREATE TABLE codigos_verificacion (
 ) ENGINE=InnoDB;
 
 -- ---------------------------------------------------------
--- Datos base: los 7 niveles
+-- Datos base: los 14 niveles (7 internos y 7 externos)
 -- ---------------------------------------------------------
 INSERT INTO niveles (orden, clave, tipo, nombre) VALUES
   (1, 'INT-BEG', 'interno', 'Beginner'),

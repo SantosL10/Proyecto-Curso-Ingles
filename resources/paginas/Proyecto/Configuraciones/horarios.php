@@ -54,6 +54,7 @@
                         <tr>
                             <th>Clave</th>
                             <th>Horario</th>
+                            <th>Salón</th>
                             <th>Cupo</th>
                             <th>Registrados</th>
                             <th>Disponible</th>
@@ -87,13 +88,18 @@
             </div>
             <div class="campo">
                 <label for="horaInicio">Hora de inicio</label>
-                <input class="input" type="time" id="horaInicio">
+                <select class="select" id="horaInicio"></select>
             </div>
             <div class="campo">
                 <label for="horaFin">Hora de fin</label>
-                <input class="input" type="time" id="horaFin">
+                <select class="select" id="horaFin"></select>
             </div>
-            <div class="campo completo">
+            <div class="campo">
+                <label for="salon">Salón</label>
+                <input class="input" type="text" id="salon" list="listaSalones" maxlength="10" placeholder="Ej. CLE1" autocomplete="off">
+                <datalist id="listaSalones"></datalist>
+            </div>
+            <div class="campo">
                 <label for="cupo">Cupo</label>
                 <input class="input" type="number" id="cupo" placeholder="Ej. 30" min="1">
             </div>
@@ -113,6 +119,34 @@
     const selNivel = document.getElementById('nivel');
     let horarioEditando = null;
     let periodos = [];
+    function a12(texto) {
+        const [h, m] = texto.slice(0, 5).split(':').map(Number);
+        const sufijo = h >= 12 ? 'PM' : 'AM';
+        const h12 = h % 12 === 0 ? 12 : h % 12;
+        return `${h12}:${String(m).padStart(2, '0')} ${sufijo}`;
+    }
+    // Llena una lista con horas cada 30 minutos (de 07:00 a 21:00)
+    function llenarHoras(select) {
+        select.innerHTML = '';
+
+        const inicial = document.createElement('option');
+        inicial.value = '';
+        inicial.textContent = '--:--';
+        select.appendChild(inicial);
+
+        for (let minutos = 6 * 60; minutos <= 23 * 60; minutos += 30) {
+            const h = String(Math.floor(minutos / 60)).padStart(2, '0');
+            const m = String(minutos % 60).padStart(2, '0');
+
+            const opcion = document.createElement('option');
+            opcion.value = `${h}:${m}`;
+            opcion.textContent = a12(`${h}:${m}`);
+            select.appendChild(opcion);
+        }
+    }
+
+    llenarHoras(document.getElementById('horaInicio'));
+    llenarHoras(document.getElementById('horaFin'));
 
     const mayuscula = (t) => t.charAt(0).toUpperCase() + t.slice(1);
     const hora = (t) => t.slice(0, 5);
@@ -164,6 +198,7 @@
             selNivel.value = h.nivel_id;
             document.getElementById('horaInicio').value = hora(h.hora_inicio);
             document.getElementById('horaFin').value = hora(h.hora_fin);
+            document.getElementById('salon').value = h.salon;
             document.getElementById('cupo').value = h.cupo;
         } else if (periodos.length) {
             selPeriodo.value = periodos[0].id; // el más reciente
@@ -180,6 +215,13 @@
     async function cargarHorarios() {
         const respuesta = await fetch('/horarios', { headers: { 'Accept': 'application/json' } });
         const horarios = await respuesta.json();
+        const listaSalones = document.getElementById('listaSalones');
+        listaSalones.innerHTML = '';
+        [...new Set(['CLE1', 'CLE2', 'CLE3', ...horarios.map(h => h.salon)])].forEach(s => {
+            const opcion = document.createElement('option');
+            opcion.value = s;
+            listaSalones.appendChild(opcion);
+        });
         const cuerpo = document.getElementById('tablaHorarios');
         cuerpo.innerHTML = '';
 
@@ -189,7 +231,8 @@
 
             [
                 h.clave,
-                `${hora(h.hora_inicio)} - ${hora(h.hora_fin)}`,
+                `${a12(h.hora_inicio)} - ${a12(h.hora_fin)}`,
+                h.salon,
                 h.cupo,
                 registrados,
                 h.cupo - registrados,
@@ -235,6 +278,7 @@
             nivel_id: horarioEditando ? horarioEditando.nivel_id : selNivel.value,
             hora_inicio: document.getElementById('horaInicio').value,
             hora_fin: document.getElementById('horaFin').value,
+            salon: document.getElementById('salon').value,
             cupo: document.getElementById('cupo').value
         };
 
@@ -280,9 +324,15 @@
         const filas = Array.from(cuerpo.querySelectorAll('tr'));
         const ascendente = direcciones[columna] !== false;
 
+        const valor = (fila) => {
+            const texto = fila.cells[columna].textContent;
+            if (columna !== 1) return texto;
+            const [, h, m, sufijo] = texto.match(/^(\d+):(\d+) (AM|PM)/);
+            return String((Number(h) % 12) + (sufijo === 'PM' ? 12 : 0)).padStart(2, '0') + m;
+        };
+
         filas.sort((a, b) => {
-            const resultado = a.cells[columna].textContent
-                .localeCompare(b.cells[columna].textContent, 'es', { numeric: true });
+            const resultado = valor(a).localeCompare(valor(b), 'es', { numeric: true });
             return ascendente ? resultado : -resultado;
         });
 
@@ -292,7 +342,7 @@
 
     document.getElementById('ordenarClave').addEventListener('click', () => ordenarPor(0));
     document.getElementById('ordenarHorario').addEventListener('click', () => ordenarPor(1));
-    document.getElementById('ordenarTipo').addEventListener('click', () => ordenarPor(5));
+    document.getElementById('ordenarTipo').addEventListener('click', () => ordenarPor(6));
 </script>
 <script src="/front/login/sesion.js"></script>
 </body>

@@ -3,9 +3,11 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\NivelController;
+use App\Http\Controllers\GrupoController;
 use App\Http\Controllers\UsuarioController;
 use App\Http\Controllers\HorarioController;
 use App\Http\Controllers\PeriodoController;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -44,6 +46,9 @@ Route::middleware(['auth', 'activo'])->group(function () {
     Route::post('/horarios', [HorarioController::class, 'store'])->name('horarios.store');
     Route::put('/horarios/{horario}', [HorarioController::class, 'update'])->name('horarios.update');
 
+    Route::get('/grupos', [GrupoController::class, 'index'])->name('grupos.index');
+    Route::get('/docentes', [GrupoController::class, 'docentes'])->name('docentes.index');
+    Route::put('/grupos/{grupo}', [GrupoController::class, 'update'])->name('grupos.update');
 
     Route::get('/periodos', [PeriodoController::class, 'index'])->name('periodos.index');
     Route::post('/periodos', [PeriodoController::class, 'store'])->name('periodos.store');
