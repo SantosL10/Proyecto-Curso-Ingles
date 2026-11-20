@@ -41,6 +41,9 @@ Route::middleware(['auth', 'activo'])->group(function () {
     Route::put('/niveles/{nivel}', [NivelController::class, 'update'])->name('niveles.update');
 
     Route::get('/horarios', [HorarioController::class, 'index'])->name('horarios.index');
+    Route::post('/horarios', [HorarioController::class, 'store'])->name('horarios.store');
+    Route::put('/horarios/{horario}', [HorarioController::class, 'update'])->name('horarios.update');
+
 
     Route::get('/periodos', [PeriodoController::class, 'index'])->name('periodos.index');
     Route::post('/periodos', [PeriodoController::class, 'store'])->name('periodos.store');
